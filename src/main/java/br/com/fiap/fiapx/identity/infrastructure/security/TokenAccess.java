@@ -3,6 +3,7 @@ import br.com.fiap.fiapx.identity.core.domain.Account;
 import br.com.fiap.fiapx.identity.core.usecase.IdentityService;
 import br.com.fiap.fiapx.identity.core.exception.IdentityException;
 import static br.com.fiap.fiapx.identity.core.exception.IdentityException.Code.UNAUTHORIZED;
+import static br.com.fiap.fiapx.identity.core.exception.IdentityException.Code.SERVICE_UNAUTHORIZED;
 import org.springframework.security.oauth2.jwt.*;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -19,7 +20,7 @@ public class TokenAccess {
         } catch (IllegalArgumentException | NullPointerException | ClassCastException e) { throw new IdentityException(UNAUTHORIZED); }
     }
     public Account validate(String key,String token) {
-        if(key==null || !MessageDigest.isEqual(serviceKey,key.getBytes(StandardCharsets.UTF_8))) throw new IdentityException(UNAUTHORIZED);
+        if(key==null || !MessageDigest.isEqual(serviceKey,key.getBytes(StandardCharsets.UTF_8))) throw new IdentityException(SERVICE_UNAUTHORIZED);
         try { return current(decoder.decode(token)); }
         catch (JwtException | IllegalArgumentException e) { throw new IdentityException(UNAUTHORIZED); }
     }
