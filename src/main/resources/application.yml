@@ -1,0 +1,53 @@
+spring:
+  application:
+    name: fiapx-identity-service
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5433/fiapx_identity}
+    username: ${DB_USERNAME:fiapx_identity}
+    password: ${DB_PASSWORD}
+    hikari:
+      maximum-pool-size: 5
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.yaml
+  jackson:
+    deserialization:
+      fail-on-unknown-properties: true
+server:
+  port: ${SERVER_PORT:8081}
+  shutdown: graceful
+identity:
+  jwt:
+    issuer: ${JWT_ISSUER:fiapx-identity}
+    audience: ${JWT_AUDIENCE:fiapx-api}
+    private-key: ${JWT_PRIVATE_KEY:file:.local/keys/private.pem}
+    public-key: ${JWT_PUBLIC_KEY:file:.local/keys/public.pem}
+  service-key: ${IDENTITY_SERVICE_KEY}
+  bootstrap:
+    enabled: ${BOOTSTRAP_ADMIN_ENABLED:false}
+    name: ${BOOTSTRAP_ADMIN_NAME:Administrator}
+    email: ${BOOTSTRAP_ADMIN_EMAIL:}
+    password: ${BOOTSTRAP_ADMIN_PASSWORD:}
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: never
+      probes:
+        enabled: true
+      group:
+        readiness:
+          include: readinessState,db
+springdoc:
+  api-docs:
+    enabled: ${API_DOCS_ENABLED:false}
+    path: /v3/api-docs
+  swagger-ui:
+    enabled: ${API_DOCS_ENABLED:false}
+    path: /swagger-ui.html
