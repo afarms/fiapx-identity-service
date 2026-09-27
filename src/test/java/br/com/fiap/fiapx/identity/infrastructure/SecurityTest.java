@@ -75,9 +75,9 @@ class SecurityTest {
         when(service.current(account.id(),3)).thenReturn(account);
         var jwt=decoder().decode(token(claims().build()));
         assertEquals(account,access.current(jwt)); assertEquals(account,access.validate(key,jwt.getTokenValue()));
-        assertThrows(IdentityException.class,() -> access.validate(null,jwt.getTokenValue()));
-        assertThrows(IdentityException.class,() -> access.validate("bad",jwt.getTokenValue()));
-        assertThrows(IdentityException.class,() -> access.validate(key,"bad"));
+        assertEquals(IdentityException.Code.SERVICE_UNAUTHORIZED,assertThrows(IdentityException.class,() -> access.validate(null,jwt.getTokenValue())).code());
+        assertEquals(IdentityException.Code.SERVICE_UNAUTHORIZED,assertThrows(IdentityException.class,() -> access.validate("bad",jwt.getTokenValue())).code());
+        assertEquals(IdentityException.Code.UNAUTHORIZED,assertThrows(IdentityException.class,() -> access.validate(key,"bad")).code());
         assertThrows(IdentityException.class,() -> access.validate(key,null));
         assertThrows(IllegalArgumentException.class,() -> new TokenAccess(service,decoder(),"short"));
         assertThrows(IllegalArgumentException.class,() -> new TokenAccess(service,decoder(),null));

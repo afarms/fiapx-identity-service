@@ -35,10 +35,11 @@ class WebTest {
     }
     @Test void errorResponsesAreSanitized() {
         var errors=new ApiErrors();
-        int[] expected={401,403,404,409,503}; int index=0;
+        int[] expected={401,403,404,409,503,401}; int index=0;
         for(var code:IdentityException.Code.values()) {
             var response=errors.identity(new IdentityException(code,new RuntimeException("secret")));
             assertEquals(expected[index++],response.getStatusCode().value());
+            assertEquals(code.name(),response.getBody().getProperties().get("code"));
             assertFalse(response.getBody().toString().contains("secret"));
         }
         assertEquals(400,errors.invalid(new IllegalArgumentException("secret")).getStatusCode().value());

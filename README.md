@@ -49,6 +49,8 @@ Credenciais incorretas/ausentes, assinatura inválida e token revogado retornam 
 
 ## Integração e chaves
 
+Erros de domínio incluem `code` no ProblemDetail. Na validação interna, HTTP 401 com `SERVICE_UNAUTHORIZED` indica credencial do serviço ausente/incorreta; `UNAUTHORIZED` indica token do usuário inválido/revogado. O consumidor deve apresentar 503 para falha da credencial de serviço e 401 para token do usuário. HTTP 403 com `FORBIDDEN` indica conta bloqueada. Respostas inesperadas ou sem código reconhecido não autorizam acesso.
+
 Issuer padrão `fiapx-identity`, audience `fiapx-api`, sub UUID, claim `ver` com versão de credenciais. JWT_ISSUER/JWT_AUDIENCE configuráveis; JWT_PRIVATE_KEY/JWT_PUBLIC_KEY são recursos PEM PKCS#8/X.509. Chaves persistem fora da imagem e do Git; a privada pertence somente à identidade. Configurar leitura pelo UID 10001 em montagens Linux e usar HTTPS na implantação. Rotação coordenada/manual ainda não possui JWKS automatizado.
 
 Após validar assinatura/issuer/audience/tempo, o consumidor deve consultar `/internal/accounts/validate` com seu segredo de serviço e o token completo a cada nova operação protegida, sem cache positivo. A resposta usa conta/papel/versão atuais; uma indisponibilidade deve impedir autorização, normalmente com 503. A integração do serviço de vídeos ainda será implementada. Contrato customizado: este serviço não anuncia compatibilidade com OAuth Authorization Server/OIDC.
