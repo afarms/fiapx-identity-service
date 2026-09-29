@@ -4,10 +4,12 @@ metadata:
   name: fiapx-identity-service
   namespace: fiapx
 spec:
-  type: ClusterIP
+  type: NodePort
+  externalTrafficPolicy: Cluster
   selector:
     app: fiapx-identity-service
   ports:
     - name: http
       port: 8080
+      nodePort: 30081
       targetPort: http
