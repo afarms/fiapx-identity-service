@@ -1,5 +1,7 @@
 # FIAP X — Identidade
 
+Entrada cloud preparada: /api/identity/ no endereço CloudFront, Swagger em /api/identity/swagger-ui.html. O Service NodePort30081 é privado e mantém porta8080 para chamadas internas. SERVER_FORWARD_HEADERS_STRATEGY=framework interpreta os cabeçalhos normalizados pela borda. A URL real e a ordem de ativação estão no [runbook de infraestrutura](https://github.com/afarms/fiapx-infra/blob/main/docs/operations/public-api.md); dependem do apply.
+
 Serviço independente de cadastro, autenticação e autorização de contas. Java 21, Spring Boot 4.1.1, PostgreSQL 17, Liquibase SQL e Clean Architecture. Core sem Spring; infraestrutura com entity/mapper/adapter/repository e composição em BeanConfig.
 
 ## Executar localmente
